@@ -9,17 +9,30 @@
 import UIKit
 
 class ViewController: UIViewController {
-
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+        makeRequest()
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    
+    internal func makeRequest() {
+        let jsonUrlString = "https://api.letsbuildthatapp.com/jsondecodable/courses_missing_fields"
+        if let url = URL(string: jsonUrlString) {
+            URLSession.shared.dataTask(with: url) { (data, response, error) in
+                if let error = error {
+                    print(error.localizedDescription)
+                }
+                if let data = data {
+                    do {
+                        //let websiteDescription = try JSONDecoder().decode(WebsiteDescription.self, from: data)
+                        //print(websiteDescription.name, websiteDescription.description)
+                        let courses = try JSONDecoder().decode([Course].self, from: data)
+                        print(courses)
+                    } catch let jsonError {
+                        print(jsonError.localizedDescription)
+                    }
+                }
+                }.resume()
+        }
     }
-
-
 }
 
